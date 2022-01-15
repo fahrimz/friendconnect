@@ -2,6 +2,8 @@ import express, {json} from 'express';
 import cors from 'cors';
 import usersRouter from './routes/users-routes.js';
 import authRouter from './routes/auth-routes.js';
+import postsRouter from './routes/posts-routes.js';
+import commentsRouter from './routes/comments-routes.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
@@ -17,6 +19,8 @@ app.use(cookieParser());
 
 app.use('/api/auth',authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/comments', commentsRouter);
 
 
 app.listen(PORT, ()=> {

@@ -7,7 +7,7 @@ import { jwtTokens } from '../utils/jwt-helpers.js';
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/',authenticateToken, async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const users = await pool.query('SELECT id_user, username, invite_code, avatar_url FROM users');
     res.json({users : users.rows});
@@ -16,7 +16,7 @@ router.get('/',authenticateToken, async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newUser = await pool.query(
