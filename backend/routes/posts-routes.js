@@ -7,7 +7,8 @@ const router = express.Router();
 /* GET users listing. */
 router.get('/', async (req, res) => {
   try {
-    const posts = await pool.query('SELECT * FROM posts');
+    const query = 'select p.*, (select count(id_like) from likes where id_post = p.id_post) as likes, (select count(id_comment) as comments from comments where id_post = p.id_post) from posts p'
+    const posts = await pool.query(query);
     res.json({ posts: posts.rows });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -26,7 +27,16 @@ router.get('/:id', async (req, res) => {
     return
   }
 
-  res.json(posts.rows[0])
+  let post = posts.rows[0]
+
+  let likes = await pool.query('select * from likes where id_post = $1', [post.id_post])
+  let comments = await pool.query(
+    'select * from comments where id_post = $1',
+    [post.id_post]
+  )
+
+  post = { ...post, likes: likes.rows, comments: comments.rows }
+  res.json(post)
 });
 
 router.post('/', authenticateToken, async (req, res) => {
