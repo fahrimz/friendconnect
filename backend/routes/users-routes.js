@@ -3,6 +3,7 @@ import pool from '../db.js';
 import bcrypt from 'bcrypt';
 import {authenticateToken} from '../middleware/authorization.js';
 import { jwtTokens } from '../utils/jwt-helpers.js';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -27,5 +28,37 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(500).json({error: error.message});
   }
 });
+
+router.get('/my', authenticateToken, async (req, res) => {
+  const authHeader = req.headers['authorization']; //Bearer TOKEN
+  const token = authHeader && authHeader.split(' ')[1];
+  const payload = jwt.decode(token)
+  
+  const users = await pool.query(
+    'SELECT id_user, username, invite_code, avatar_url, bio FROM users where id_user = $1',
+    [payload.id_user]
+  )
+
+  if (users.rows.length === 0) {
+    res.status(404).send({ message: 'data not found' })
+  }
+
+  res.json(users.rows[0])
+})
+
+router.get('/:id', authenticateToken, async (req, res) => {
+  const id_user = req.params.id
+
+  const users = await pool.query(
+    'SELECT id_user, username, invite_code, avatar_url, bio FROM users where id_user = $1',
+    [id_user]
+  )
+
+  if (users.rows.length === 0) {
+    res.status(404).send({ message: 'data not found' })
+  }
+
+  res.json(users.rows[0])
+})
 
 export default router;
