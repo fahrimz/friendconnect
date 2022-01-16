@@ -61,7 +61,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
   res.json(users.rows[0])
 })
 
-router.post('/change-bio', async (req, res) => {
+router.post('/change-bio', authenticateToken, async (req, res) => {
   const { id_user, bio } = req.body
 
   try {
@@ -71,6 +71,32 @@ router.post('/change-bio', async (req, res) => {
     )
 
     res.json({ message: 'bio updated.' })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+router.post('/add-friend', authenticateToken, async (req, res) => {
+  const authHeader = req.headers['authorization']; //Bearer TOKEN
+  const token = authHeader && authHeader.split(' ')[1];
+  const user = jwt.decode(token)
+  const { invite_code } = req.body
+
+  const friendQueryResult = await pool.query('SELECT id_user FROM users WHERE invite_code = $1', [invite_code])
+  
+  if (friendQueryResult.rows.length === 0) {
+    res.status(404).send({ message: 'User not found.' })
+  }
+
+  const friend = friendQueryResult.rows[0]
+
+  try {
+    await pool.query(
+      'INSERT INTO friendships VALUES (default, $1, $2)',
+      [user.id_user, friend.id_user]
+    )
+
+    res.json({message: 'friend added.'})
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
