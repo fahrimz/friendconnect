@@ -1,7 +1,7 @@
 import express from 'express';
 import pool from '../db.js';
 import bcrypt from 'bcrypt';
-import {authenticateToken} from '../middleware/authorization.js';
+import { authenticateToken } from '../middleware/authorization.js';
 import { jwtTokens } from '../utils/jwt-helpers.js';
 import jwt from 'jsonwebtoken';
 
@@ -11,9 +11,9 @@ const router = express.Router();
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const users = await pool.query('SELECT id_user, username, invite_code, avatar_url FROM users');
-    res.json({users : users.rows});
+    res.json({ users: users.rows });
   } catch (error) {
-    res.status(500).json({error: error.message});
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -25,7 +25,7 @@ router.post('/', authenticateToken, async (req, res) => {
       , [req.body.username, hashedPassword, req.body.username, 'https://via.placeholder.com/100']);
     res.json(jwtTokens(newUser.rows[0]));
   } catch (error) {
-    res.status(500).json({error: error.message});
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -33,7 +33,7 @@ router.get('/my', authenticateToken, async (req, res) => {
   const authHeader = req.headers['authorization']; //Bearer TOKEN
   const token = authHeader && authHeader.split(' ')[1];
   const payload = jwt.decode(token)
-  
+
   const users = await pool.query(
     'SELECT id_user, username, invite_code, avatar_url, bio FROM users where id_user = $1',
     [payload.id_user]
@@ -59,6 +59,21 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 
   res.json(users.rows[0])
+})
+
+router.post('/change-bio', async (req, res) => {
+  const { id_user, bio } = req.body
+
+  try {
+    await pool.query(
+      'UPDATE users SET bio = $1 WHERE id_user = $2',
+      [bio, id_user]
+    )
+
+    res.json({ message: 'bio updated.' })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
 })
 
 export default router;
