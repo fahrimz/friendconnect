@@ -26,7 +26,7 @@
             android:name=".ListPostActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true" />
 
         <meta-data

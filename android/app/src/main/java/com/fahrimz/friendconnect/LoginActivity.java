@@ -2,11 +2,8 @@ package com.fahrimz.friendconnect;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     EditText editUsername;
     EditText editPassword;
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         pref = new PrefManager(this);
 
         editUsername = findViewById(R.id.editUsername);
@@ -79,13 +76,14 @@ public class MainActivity extends AppCompatActivity {
                     String username = response.body().getUsername();
                     pref.createLogin(accessToken, username);
 
-                    Intent intent = new Intent(MainActivity.this, ListPostActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, ListPostActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("username", pref.getUsername());
                     startActivity(intent);
                 } else {
                     Gson gson = new Gson();
                     ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
-                    Toast.makeText(MainActivity.this, error.getError(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, error.getError(), Toast.LENGTH_LONG).show();
                 }
             }
 

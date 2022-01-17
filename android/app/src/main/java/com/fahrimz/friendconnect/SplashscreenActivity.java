@@ -20,9 +20,8 @@ public class SplashscreenActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             boolean isLoggedIn = pref.isLoggedIn();
-            Log.d("debug", isLoggedIn ? "isLoggedIn" : "notLoggedIn");
 
-            Class nextActivityClass = isLoggedIn ? ListPostActivity.class : MainActivity.class;
+            Class nextActivityClass = isLoggedIn ? ListPostActivity.class : LoginActivity.class;
             Intent nextActivity = new Intent(SplashscreenActivity.this, nextActivityClass);
             startActivity(nextActivity);
             finish();
