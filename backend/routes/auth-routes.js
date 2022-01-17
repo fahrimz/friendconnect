@@ -16,12 +16,19 @@ router.post('/login', async (req, res) => {
     if (!validPassword) return res.status(401).json({error: "Incorrect password"});
     //JWT
     let tokens = jwtTokens(users.rows[0]);//Gets access tokens
-    res.json(tokens);
+    
+    const {password: dbPassword, ...publicUserData} = users.rows[0]
+
+    const response = {
+      ...tokens,
+      ...publicUserData
+    }
+
+    res.json(response);
   } catch (error) {
     res.status(401).json({error: error.message});
   }
 
 });
-
 
 export default router;
