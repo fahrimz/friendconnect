@@ -75,8 +75,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    pref.setAccessToken(response.body().getAccessToken());
-                    pref.setUsername(response.body().getUsername());
+                    String accessToken = response.body().getAccessToken();
+                    String username = response.body().getUsername();
+                    pref.createLogin(accessToken, username);
 
                     Intent intent = new Intent(MainActivity.this, ListPostActivity.class);
                     intent.putExtra("username", pref.getUsername());
