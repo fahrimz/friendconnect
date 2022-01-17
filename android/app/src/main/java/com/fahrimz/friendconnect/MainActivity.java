@@ -2,8 +2,11 @@ package com.fahrimz.friendconnect;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +18,6 @@ import com.fahrimz.friendconnect.model.LoginRequest;
 import com.fahrimz.friendconnect.remote.ApiUtils;
 import com.fahrimz.friendconnect.remote.UserService;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,10 +30,13 @@ public class MainActivity extends AppCompatActivity {
     Button btnLogin;
     UserService userService;
 
+    PrefManager pref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        pref = new PrefManager(this);
 
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
@@ -72,8 +75,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
+                    pref.setAccessToken(response.body().getAccessToken());
+                    pref.setUsername(response.body().getUsername());
+
                     Intent intent = new Intent(MainActivity.this, ListPostActivity.class);
-                    intent.putExtra("username", username);
+                    intent.putExtra("username", pref.getUsername());
                     startActivity(intent);
                 } else {
                     Gson gson = new Gson();

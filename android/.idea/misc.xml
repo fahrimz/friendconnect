@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/dev/friendconnect/android/app/src/main/res/layout/activity_list_post.xml" value="0.4" />
+        <entry key="..\:/dev/friendconnect/android/app/src/main/res/layout/activity_list_post.xml" value="0.536" />
         <entry key="..\:/dev/friendconnect/android/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/dev/friendconnect/android/app/src/main/res/layout/activity_splash.xml" value="0.2" />
         <entry key="..\:/dev/friendconnect/android/app/src/main/res/xml/network_security_config.xml" value="0.14375" />
       </map>
     </option>
