@@ -59,9 +59,7 @@ public class ListPostAdapter extends RecyclerView.Adapter<ListPostAdapter.ViewHo
 
         Glide.with(holder.itemView)
                 .load(glideUrl)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
-                .centerCrop()
+                .circleCrop()
                 .into(holder.imgAvatar);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +86,8 @@ public class ListPostAdapter extends RecyclerView.Adapter<ListPostAdapter.ViewHo
             this.tvDate = view.findViewById(R.id.tvDate);
             this.imgAvatar = view.findViewById(R.id.imgAvatar);
             this.tvLikes = view.findViewById(R.id.tvLikes);
+
+            Glide.with(view).load(this.imgAvatar.getDrawable()).circleCrop().into(this.imgAvatar);
         }
     }
 }

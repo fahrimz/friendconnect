@@ -71,6 +71,8 @@ public class DetailPostActivity extends AppCompatActivity {
         imgLike = findViewById(R.id.imgLike);
         txtAddComment = findViewById(R.id.txtAddComment);
 
+        Glide.with(this).load(imgAvatar.getDrawable()).circleCrop().into(imgAvatar);
+
         // get idPost from previous activity
         Bundle extras = getIntent().getExtras();
         try {
@@ -169,9 +171,7 @@ public class DetailPostActivity extends AppCompatActivity {
 
                         Glide.with(DetailPostActivity.this)
                                 .load(glideUrl)
-                                .placeholder(R.drawable.ic_launcher_background)
-                                .error(R.drawable.ic_launcher_background)
-                                .centerCrop()
+                                .circleCrop()
                                 .into(imgAvatar);
                     } catch (Exception e) {
                         Toast.makeText(DetailPostActivity.this, "Cannot show image", Toast.LENGTH_SHORT).show();

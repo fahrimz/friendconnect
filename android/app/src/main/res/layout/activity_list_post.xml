@@ -10,7 +10,9 @@
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
         tools:layout_editor_absoluteX="0dp" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
