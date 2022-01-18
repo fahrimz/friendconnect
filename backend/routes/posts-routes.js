@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 
   let likes = await pool.query('select * from likes where id_post = $1', [post.id_post])
   let comments = await pool.query(
-    'select * from comments where id_post = $1',
+    'select c.*, u.username from comments c join users u using (id_user) where id_post = $1',
     [post.id_post]
   )
 

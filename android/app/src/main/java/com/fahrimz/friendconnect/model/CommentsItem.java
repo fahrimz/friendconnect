@@ -16,6 +16,9 @@ public class CommentsItem{
 	@SerializedName("body")
 	private String body;
 
+	@SerializedName("username")
+	private String username;
+
 	public void setIdPost(int idPost){
 		this.idPost = idPost;
 	}
@@ -46,5 +49,9 @@ public class CommentsItem{
 
 	public String getBody(){
 		return body;
+	}
+
+	public String getUsername(){
+		return username;
 	}
 }
