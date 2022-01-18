@@ -34,10 +34,11 @@ router.get('/my', authenticateToken, async (req, res) => {
   const token = authHeader && authHeader.split(' ')[1];
   const payload = jwt.decode(token)
 
-  const users = await pool.query(
-    'SELECT id_user, username, invite_code, avatar_url, bio FROM users where id_user = $1',
-    [payload.id_user]
-  )
+  let query = 'SELECT id_user, username, invite_code, avatar_url, bio, ';
+  query += '(select count(id_post) from posts where id_user = u.id_user) as posts, ';
+  query += '(select count(id_friend) from friendships where id_user = u.id_user) as friends ';
+  query += 'from users u where id_user = $1';
+  const users = await pool.query(query, [payload.id_user]);
 
   if (users.rows.length === 0) {
     res.status(404).send({ message: 'data not found' })
