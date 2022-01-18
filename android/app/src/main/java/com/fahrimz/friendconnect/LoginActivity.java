@@ -78,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(LoginActivity.this, ListPostActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("username", pref.getUsername());
                     startActivity(intent);
                 } else {
                     Gson gson = new Gson();
