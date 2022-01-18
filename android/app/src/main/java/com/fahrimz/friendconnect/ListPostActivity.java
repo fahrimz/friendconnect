@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -108,5 +110,31 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         Intent intent = new Intent(this, DetailPostActivity.class);
         intent.putExtra(EXTRA_KEY_ID_POST, item.getIdPost());
         addPostActivityLauncher.launch(intent);
+    }
+
+    // create an action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+
+        switch (item.getItemId()) {
+            case R.id.add_friend:
+                intent = new Intent(this, AddFriendActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.my_profile:
+                intent = new Intent(this, MyProfileActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

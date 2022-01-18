@@ -34,6 +34,8 @@ public class AddFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_friend);
         pref = new PrefManager(this);
         userService = ApiUtils.getUserService();
+        setTitle("Add Friend");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         txtInviteCode = findViewById(R.id.txtInviteCode);
         btnAddFriend = findViewById(R.id.btnAddFriend);
