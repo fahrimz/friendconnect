@@ -41,7 +41,7 @@ router.get('/my', authenticateToken, async (req, res) => {
   const users = await pool.query(query, [payload.id_user]);
 
   if (users.rows.length === 0) {
-    res.status(404).send({ message: 'data not found' })
+    res.status(404).send({ error: 'data not found' })
   }
 
   res.json(users.rows[0])
@@ -56,24 +56,24 @@ router.get('/:id', authenticateToken, async (req, res) => {
   )
 
   if (users.rows.length === 0) {
-    res.status(404).send({ message: 'data not found' })
+    res.status(404).send({ error: 'data not found' })
   }
 
   res.json(users.rows[0])
 })
 
-router.post('/change-bio', authenticateToken, async (req, res) => {
-  const { id_user, bio } = req.body
+router.post('/update-profile', authenticateToken, async (req, res) => {
+  const { id_user, bio, invite_code } = req.body
 
   try {
     await pool.query(
-      'UPDATE users SET bio = $1 WHERE id_user = $2',
-      [bio, id_user]
+      'UPDATE users SET bio = $1, invite_code = $2 WHERE id_user = $3',
+      [bio, invite_code, id_user]
     )
 
-    res.json({ message: 'bio updated.' })
+    res.json({ message: 'profile updated.' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
   }
 })
 
@@ -86,7 +86,7 @@ router.post('/add-friend', authenticateToken, async (req, res) => {
   const friendQueryResult = await pool.query('SELECT id_user FROM users WHERE invite_code = $1', [invite_code])
   
   if (friendQueryResult.rows.length === 0) {
-    res.status(404).send({ message: 'User not found.' })
+    res.status(404).send({ error: 'User not found.' })
   }
 
   const friend = friendQueryResult.rows[0]
@@ -99,7 +99,7 @@ router.post('/add-friend', authenticateToken, async (req, res) => {
 
     res.json({message: 'friend added.'})
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
   }
 })
 

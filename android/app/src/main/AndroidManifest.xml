@@ -14,13 +14,17 @@
         android:theme="@style/Theme.Friendconnect"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MyProfileActivity"
-            android:parentActivityName=".ListPostActivity"
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".MyProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".MyProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".ListPostActivity" />
+        <activity
             android:name=".AddFriendActivity"
-            android:parentActivityName=".ListPostActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ListPostActivity" />
         <activity
             android:name=".AddCommentActivity"
             android:exported="false"
