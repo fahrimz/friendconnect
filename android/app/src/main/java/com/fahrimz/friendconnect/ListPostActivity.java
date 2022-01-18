@@ -1,5 +1,7 @@
 package com.fahrimz.friendconnect;
 
+import static com.fahrimz.friendconnect.DetailPostActivity.EXTRA_KEY_ID_POST;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListPostActivity extends AppCompatActivity {
+public class ListPostActivity extends AppCompatActivity implements RecyclerViewClickListener {
 
     private RecyclerView recyclerView;
     private ListPostAdapter listPostAdapter;
@@ -57,6 +59,8 @@ public class ListPostActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         listPostAdapter = new ListPostAdapter(listPost);
+        listPostAdapter.clickListener = this;
+
         recyclerView.setAdapter(listPostAdapter);
         getData();
 
@@ -85,5 +89,12 @@ public class ListPostActivity extends AppCompatActivity {
                 Log.d("debug", t.getLocalizedMessage());
             }
         });
+    }
+
+    @Override
+    public void onItemClicked(View view, PostsItem item) {
+        Intent intent = new Intent(this, DetailPostActivity.class);
+        intent.putExtra(EXTRA_KEY_ID_POST, item.getIdPost());
+        startActivity(intent);
     }
 }

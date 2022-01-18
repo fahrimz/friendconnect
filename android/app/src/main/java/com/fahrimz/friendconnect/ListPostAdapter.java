@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class ListPostAdapter extends RecyclerView.Adapter<ListPostAdapter.ViewHolder> {
 
     private ArrayList<PostsItem> listPost;
+    public RecyclerViewClickListener clickListener = null;
 
     public ListPostAdapter(ArrayList<PostsItem> listPost) {
         this.listPost = listPost;
@@ -62,6 +63,13 @@ public class ListPostAdapter extends RecyclerView.Adapter<ListPostAdapter.ViewHo
                 .error(R.drawable.ic_launcher_background)
                 .centerCrop()
                 .into(holder.imgAvatar);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.onItemClicked(v, post);
+            }
+        });
     }
 
     @Override

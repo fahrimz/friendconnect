@@ -14,6 +14,9 @@
         android:theme="@style/Theme.Friendconnect"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".DetailPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddPostActivity"
             android:exported="false" />
         <activity

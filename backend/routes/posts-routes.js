@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id_post = req.params.id
   const posts = await pool.query(
-    'SELECT * FROM POSTS WHERE id_post = $1',
+    'select p.*, u.username, u.avatar_url from posts p join users u using (id_user) where id_post = $1',
     [id_post]
   )
 

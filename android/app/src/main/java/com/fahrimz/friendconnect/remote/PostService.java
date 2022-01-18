@@ -2,6 +2,7 @@ package com.fahrimz.friendconnect.remote;
 
 import com.fahrimz.friendconnect.model.AddPostRequest;
 import com.fahrimz.friendconnect.model.AddPostResponse;
+import com.fahrimz.friendconnect.model.DetailPostResponse;
 import com.fahrimz.friendconnect.model.PostsResponse;
 
 import retrofit2.Call;
@@ -9,11 +10,15 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface PostService {
     @GET("api/posts")
     Call<PostsResponse> getPosts();
 
-    @POST("/api/posts")
+    @GET("api/posts/{id}")
+    Call<DetailPostResponse> getPost(@Path("id") int idPost);
+
+    @POST("api/posts")
     Call<AddPostResponse> addPost(@Body AddPostRequest body, @Header("Authorization") String auth);
 }
