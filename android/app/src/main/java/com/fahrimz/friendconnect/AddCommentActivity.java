@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,6 +35,9 @@ public class AddCommentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_comment);
+        setTitle("Add Comment");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
 
@@ -78,5 +82,16 @@ public class AddCommentActivity extends AppCompatActivity {
                 Toast.makeText(AddCommentActivity.this, "Cannot add comment. Please try again later", Toast.LENGTH_SHORT);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 }

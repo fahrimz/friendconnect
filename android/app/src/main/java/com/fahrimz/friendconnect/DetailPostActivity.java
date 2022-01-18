@@ -50,6 +50,9 @@ public class DetailPostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_post);
+        setTitle("Detail Post");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
         commentRecyclerView = findViewById(R.id.commentRecycleView);
@@ -76,9 +79,7 @@ public class DetailPostActivity extends AppCompatActivity {
 
             addCommentActivityLauncher = registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(), result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            getData(idPost);
-                        }
+                        getData(idPost);
                     }
             );
 
