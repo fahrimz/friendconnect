@@ -119,13 +119,13 @@ public class DetailPostActivity extends AppCompatActivity {
                             break;
                     }
                 } else {
-                    Toast.makeText(DetailPostActivity.this, "Cannot like post. try again later.", Toast.LENGTH_SHORT);
+                    Toast.makeText(DetailPostActivity.this, "Cannot like post. try again later.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ToggleLikeResponse> call, Throwable t) {
-                Toast.makeText(DetailPostActivity.this, "Cannot like post. try again later.", Toast.LENGTH_SHORT);
+                Toast.makeText(DetailPostActivity.this, "Cannot like post. try again later.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -174,14 +174,14 @@ public class DetailPostActivity extends AppCompatActivity {
                                 .centerCrop()
                                 .into(imgAvatar);
                     } catch (Exception e) {
-                        Toast.makeText(DetailPostActivity.this, "Cannot show image", Toast.LENGTH_SHORT);
+                        Toast.makeText(DetailPostActivity.this, "Cannot show image", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<DetailPostResponse> call, Throwable t) {
-                Toast.makeText(DetailPostActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(DetailPostActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -72,14 +72,14 @@ public class AddCommentActivity extends AppCompatActivity {
                 } else {
                     Gson gson = new Gson();
                     ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
-                    Toast.makeText(AddCommentActivity.this, error.getError(), Toast.LENGTH_LONG);
+                    Toast.makeText(AddCommentActivity.this, error.getError(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<AddCommentResponse> call, Throwable t) {
                 Log.d("response", t.getLocalizedMessage());
-                Toast.makeText(AddCommentActivity.this, "Cannot add comment. Please try again later", Toast.LENGTH_SHORT);
+                Toast.makeText(AddCommentActivity.this, "Cannot add comment. Please try again later", Toast.LENGTH_SHORT).show();
             }
         });
     }

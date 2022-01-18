@@ -24,9 +24,9 @@ router.post('/login', async (req, res) => {
       ...publicUserData
     }
 
-    res.json(response);
+    return res.json(response);
   } catch (error) {
-    res.status(401).json({error: error.message});
+    return res.status(401).json({error: error.message});
   }
 
 });

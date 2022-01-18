@@ -66,14 +66,14 @@ public class AddPostActivity extends AppCompatActivity {
                 } else {
                     Gson gson = new Gson();
                     ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
-                    Toast.makeText(AddPostActivity.this, error.getError(), Toast.LENGTH_LONG);
+                    Toast.makeText(AddPostActivity.this, error.getError(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<AddPostResponse> call, Throwable t) {
                 Log.d("response", t.getLocalizedMessage());
-                Toast.makeText(AddPostActivity.this, "Cannot add post. Please try again later", Toast.LENGTH_SHORT);
+                Toast.makeText(AddPostActivity.this, "Cannot add post. Please try again later", Toast.LENGTH_SHORT).show();
             }
         });
     }

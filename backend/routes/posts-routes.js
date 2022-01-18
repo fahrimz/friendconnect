@@ -17,9 +17,9 @@ router.get('/', authenticateToken, async (req, res) => {
     query += ' or id_user = $1';
     
     const posts = await pool.query(query, [payload.id_user]);
-    res.json({ posts: posts.rows });
+    return res.json({ posts: posts.rows });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -31,8 +31,7 @@ router.get('/:id', async (req, res) => {
   )
 
   if (posts.rows.length === 0) {
-    res.status(404).json({error: 'data not found'})
-    return
+    return res.status(404).json({error: 'data not found'})
   }
 
   let post = posts.rows[0]
@@ -44,7 +43,7 @@ router.get('/:id', async (req, res) => {
   )
 
   post = { ...post, likes: likes.rows, comments: comments.rows }
-  res.json(post)
+  return res.json(post)
 });
 
 router.post('/', authenticateToken, async (req, res) => {
@@ -56,9 +55,9 @@ router.post('/', authenticateToken, async (req, res) => {
       [id_user, body]
     )
 
-    res.json(posts.rows[0])
+    return res.json(posts.rows[0])
   } catch (error) {
-    res.status(500).json({error: error.message})
+    return res.status(500).json({error: error.message})
   }
 })
 

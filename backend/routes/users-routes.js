@@ -11,9 +11,9 @@ const router = express.Router();
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const users = await pool.query('SELECT id_user, username, invite_code, avatar_url FROM users');
-    res.json({ users: users.rows });
+    return res.json({ users: users.rows });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -23,9 +23,9 @@ router.post('/', authenticateToken, async (req, res) => {
     const newUser = await pool.query(
       'INSERT INTO users (username, password, invite_code, avatar_url) VALUES ($1,$2,$3, $4) RETURNING *'
       , [req.body.username, hashedPassword, req.body.username, `https://via.placeholder.com/100?text=username`]);
-    res.json(jwtTokens(newUser.rows[0]));
+    return res.json(jwtTokens(newUser.rows[0]));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -41,10 +41,10 @@ router.get('/my', authenticateToken, async (req, res) => {
   const users = await pool.query(query, [payload.id_user]);
 
   if (users.rows.length === 0) {
-    res.status(404).send({ error: 'data not found' })
+    return res.status(404).json({ error: 'data not found' })
   }
 
-  res.json(users.rows[0])
+  return res.json(users.rows[0])
 })
 
 router.get('/:id', authenticateToken, async (req, res) => {
@@ -56,10 +56,10 @@ router.get('/:id', authenticateToken, async (req, res) => {
   )
 
   if (users.rows.length === 0) {
-    res.status(404).send({ error: 'data not found' })
+    return res.status(404).json({ error: 'data not found' })
   }
 
-  res.json(users.rows[0])
+  return res.json(users.rows[0])
 })
 
 router.post('/update-profile', authenticateToken, async (req, res) => {
@@ -71,22 +71,22 @@ router.post('/update-profile', authenticateToken, async (req, res) => {
       [bio, invite_code, id_user]
     )
 
-    res.json({ message: 'profile updated.' })
+    return res.json({ message: 'profile updated.' })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    return res.status(500).json({ error: error.message })
   }
 })
 
 router.post('/add-friend', authenticateToken, async (req, res) => {
+  const { invite_code } = req.body
   const authHeader = req.headers['authorization']; //Bearer TOKEN
   const token = authHeader && authHeader.split(' ')[1];
   const user = jwt.decode(token)
-  const { invite_code } = req.body
 
   const friendQueryResult = await pool.query('SELECT id_user FROM users WHERE invite_code = $1', [invite_code])
   
   if (friendQueryResult.rows.length === 0) {
-    res.status(404).send({ error: 'User not found.' })
+    return res.status(404).json({ error: 'User not found.' })
   }
 
   const friend = friendQueryResult.rows[0]
@@ -97,9 +97,9 @@ router.post('/add-friend', authenticateToken, async (req, res) => {
       [user.id_user, friend.id_user]
     )
 
-    res.json({message: 'friend added.'})
+    return res.json({message: 'friend added.'})
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    return res.status(500).json({ error: error.message })
   }
 })
 

@@ -2,23 +2,18 @@ package com.fahrimz.friendconnect;
 
 import static com.fahrimz.friendconnect.DetailPostActivity.EXTRA_KEY_ID_POST;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.fahrimz.friendconnect.model.ErrorResponse;
@@ -44,7 +39,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
 
     private PrefManager pref;
     private PostService postService;
-    ActivityResultLauncher<Intent> addPostActivityLauncher;
+    ActivityResultLauncher<Intent> activityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +50,9 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
 
-        addPostActivityLauncher = registerForActivityResult(
+        activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    getData();
-                }
+                getData();
             }
         );
 
@@ -77,7 +70,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddPostActivity.class);
-            addPostActivityLauncher.launch(intent);
+            activityLauncher.launch(intent);
         });
     }
 
@@ -94,13 +87,13 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
                 } else {
                     Gson gson = new Gson();
                     ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
-                    Toast.makeText(ListPostActivity.this, error.getError(), Toast.LENGTH_LONG);
+                    Toast.makeText(ListPostActivity.this, error.getError(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<PostsResponse> call, Throwable t) {
-                Log.d("debug", t.getLocalizedMessage());
+                Toast.makeText(ListPostActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -109,7 +102,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
     public void onItemClicked(View view, PostsItem item) {
         Intent intent = new Intent(this, DetailPostActivity.class);
         intent.putExtra(EXTRA_KEY_ID_POST, item.getIdPost());
-        addPostActivityLauncher.launch(intent);
+        activityLauncher.launch(intent);
     }
 
     // create an action bar button
@@ -126,11 +119,11 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         switch (item.getItemId()) {
             case R.id.add_friend:
                 intent = new Intent(this, AddFriendActivity.class);
-                startActivity(intent);
+                activityLauncher.launch(intent);
                 return true;
             case R.id.my_profile:
                 intent = new Intent(this, MyProfileActivity.class);
-                startActivity(intent);
+                activityLauncher.launch(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -102,14 +102,14 @@ public class MyProfileActivity extends AppCompatActivity {
                                 .circleCrop()
                                 .into(imgAvatar);
                     } catch (Exception e) {
-                        Toast.makeText(MyProfileActivity.this, "Cannot show image", Toast.LENGTH_SHORT);
+                        Toast.makeText(MyProfileActivity.this, "Cannot show image", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<MyProfileResponse> call, Throwable t) {
-
+                Toast.makeText(MyProfileActivity.this, "Cannot get profile. Try again later.", Toast.LENGTH_SHORT).show();
             }
         });
     }

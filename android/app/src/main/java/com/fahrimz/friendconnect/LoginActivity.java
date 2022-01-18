@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.d("response", t.getLocalizedMessage());
-                Toast.makeText(LoginActivity.this, "Cannot login. Please contact administrator", Toast.LENGTH_SHORT);
+                Toast.makeText(LoginActivity.this, "Cannot login. Please contact administrator", Toast.LENGTH_SHORT).show();
             }
         });
     }

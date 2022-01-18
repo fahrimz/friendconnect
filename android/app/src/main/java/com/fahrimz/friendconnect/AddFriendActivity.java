@@ -54,19 +54,18 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AddFriendResponse> call, Response<AddFriendResponse> response) {
                 if (response.isSuccessful()) {
-                    setResult(Activity.RESULT_OK);
                     finish();
                 } else {
                     Gson gson = new Gson();
                     ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
-                    Toast.makeText(AddFriendActivity.this, error.getError(), Toast.LENGTH_LONG);
+                    Toast.makeText(AddFriendActivity.this, error.getError(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<AddFriendResponse> call, Throwable t) {
                 Log.d("response", t.getLocalizedMessage());
-                Toast.makeText(AddFriendActivity.this, "Cannot add friend. Please try again later", Toast.LENGTH_SHORT);
+                Toast.makeText(AddFriendActivity.this, "Cannot add friend. Please try again later", Toast.LENGTH_LONG).show();
             }
         });
     }
