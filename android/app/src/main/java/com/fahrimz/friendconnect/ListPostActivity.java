@@ -18,11 +18,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fahrimz.friendconnect.model.ErrorResponse;
 import com.fahrimz.friendconnect.model.PostsItem;
 import com.fahrimz.friendconnect.model.PostsResponse;
 import com.fahrimz.friendconnect.remote.ApiUtils;
 import com.fahrimz.friendconnect.remote.PostService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -37,12 +39,14 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
     private ArrayList<PostsItem> listPost = null;
     private FloatingActionButton btnAdd;
 
+    private PrefManager pref;
     private PostService postService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_post);
+        pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
 
         ActivityResultLauncher<Intent> addPostActivityLauncher = registerForActivityResult(
@@ -72,15 +76,19 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
     }
 
     public void getData() {
-        Call<PostsResponse> call = postService.getPosts();
+        String token = "Bearer " + pref.getAccessToken();
+        Call<PostsResponse> call = postService.getPosts(token);
         call.enqueue(new Callback<PostsResponse>() {
             @Override
             public void onResponse(Call<PostsResponse> call, Response<PostsResponse> response) {
-                ArrayList<PostsItem> list = new ArrayList<>();
-                list.addAll(response.body().getPosts());
-
                 if (response.body() != null && response.isSuccessful()) {
+                    ArrayList<PostsItem> list = new ArrayList<>();
+                    list.addAll(response.body().getPosts());
                     listPostAdapter.setData(list);
+                } else {
+                    Gson gson = new Gson();
+                    ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
+                    Toast.makeText(ListPostActivity.this, error.getError(), Toast.LENGTH_LONG);
                 }
             }
 

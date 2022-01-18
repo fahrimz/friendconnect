@@ -18,7 +18,7 @@ import retrofit2.http.Path;
 
 public interface PostService {
     @GET("api/posts")
-    Call<PostsResponse> getPosts();
+    Call<PostsResponse> getPosts(@Header("Authorization") String auth);
 
     @GET("api/posts/{id}")
     Call<DetailPostResponse> getPost(@Path("id") int idPost);

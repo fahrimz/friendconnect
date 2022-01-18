@@ -1,14 +1,21 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import pool from '../db.js';
 import { authenticateToken } from '../middleware/authorization.js';
 
 const router = express.Router();
 
-/* GET users listing. */
-router.get('/', async (req, res) => {
+/* GET posts from friends */
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    const query = 'select p.*, u.username, u.avatar_url, (select count(id_like) from likes where id_post = p.id_post) as likes, (select count(id_comment) as comments from comments where id_post = p.id_post) from posts p join users u using (id_user)';
-    const posts = await pool.query(query);
+    const authHeader = req.headers['authorization']; //Bearer TOKEN
+    const token = authHeader && authHeader.split(' ')[1];
+    const payload = jwt.decode(token)
+
+    let query = 'select p.*, u.username, u.avatar_url, (select count(id_like) from likes where id_post = p.id_post) as likes, (select count(id_comment) as comments from comments where id_post = p.id_post) from posts p join users u using (id_user)';
+    query += ' where id_user in (select id_friend from friendships where id_user = $1)';
+    
+    const posts = await pool.query(query, [payload.id_user]);
     res.json({ posts: posts.rows });
   } catch (error) {
     res.status(500).json({ error: error.message });
