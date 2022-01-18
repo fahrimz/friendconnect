@@ -13,4 +13,21 @@
         android:padding="20dp"
         tools:layout_editor_absoluteX="0dp" />
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_baseline_add_24"
+            android:layout_margin="20dp"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:tint="@color/white"
+            android:backgroundTint="@color/green"
+            android:id="@+id/btnAdd"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

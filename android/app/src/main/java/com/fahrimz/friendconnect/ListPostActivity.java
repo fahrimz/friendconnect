@@ -1,17 +1,26 @@
 package com.fahrimz.friendconnect;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.fahrimz.friendconnect.model.PostsItem;
 import com.fahrimz.friendconnect.model.PostsResponse;
 import com.fahrimz.friendconnect.remote.ApiUtils;
 import com.fahrimz.friendconnect.remote.PostService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -23,7 +32,8 @@ public class ListPostActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ListPostAdapter listPostAdapter;
-    private ArrayList<PostsItem> listPost;
+    private ArrayList<PostsItem> listPost = null;
+    private FloatingActionButton btnAdd;
 
     private PostService postService;
 
@@ -33,6 +43,14 @@ public class ListPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_post);
         postService = ApiUtils.getPostService();
 
+        ActivityResultLauncher<Intent> addPostActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    getData();
+                }
+            }
+        );
+
         recyclerView = findViewById(R.id.recycleView);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ListPostActivity.this);
@@ -41,6 +59,12 @@ public class ListPostActivity extends AppCompatActivity {
         listPostAdapter = new ListPostAdapter(listPost);
         recyclerView.setAdapter(listPostAdapter);
         getData();
+
+        btnAdd = findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddPostActivity.class);
+            addPostActivityLauncher.launch(intent);
+        });
     }
 
     public void getData() {
@@ -58,7 +82,7 @@ public class ListPostActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PostsResponse> call, Throwable t) {
-                Log.d("debug: getData() onFailure()", t.getLocalizedMessage());
+                Log.d("debug", t.getLocalizedMessage());
             }
         });
     }
