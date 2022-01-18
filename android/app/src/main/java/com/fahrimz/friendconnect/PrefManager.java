@@ -25,11 +25,21 @@ public class PrefManager {
     public static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     public static final String KEY_ACCESS_TOKEN = "accessToken";
     public static final String KEY_USERNAME = "username";
+    public static final String KEY_ID_USER = "idUser";
 
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setIdUser(int idUser) {
+        editor.putInt(KEY_ID_USER, idUser);
+        editor.commit();
+    }
+
+    public int getIdUser() {
+        return pref.getInt(KEY_ID_USER, 0);
     }
 
     public void setUsername(String username) {
@@ -50,7 +60,8 @@ public class PrefManager {
         return pref.getString(KEY_ACCESS_TOKEN, null);
     }
 
-    public void createLogin(String accessToken, String username) {
+    public void createLogin(int idUser, String accessToken, String username) {
+        editor.putInt(KEY_ID_USER, idUser);
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_ACCESS_TOKEN, accessToken);
         editor.putBoolean(KEY_IS_LOGGED_IN, true);

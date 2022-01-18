@@ -72,9 +72,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    String accessToken = response.body().getAccessToken();
-                    String username = response.body().getUsername();
-                    pref.createLogin(accessToken, username);
+                    LoginResponse resp = response.body();
+                    int idUser = resp.getIdUser();
+                    String accessToken = resp.getAccessToken();
+                    String username = resp.getUsername();
+                    pref.createLogin(idUser, accessToken, username);
 
                     Intent intent = new Intent(LoginActivity.this, ListPostActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -89,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.d("response", t.getLocalizedMessage());
+                Toast.makeText(LoginActivity.this, "Cannot login. Please contact administrator", Toast.LENGTH_SHORT);
             }
         });
     }
