@@ -1,5 +1,7 @@
 package com.fahrimz.friendconnect.remote;
 
+import com.fahrimz.friendconnect.model.AddCommentRequest;
+import com.fahrimz.friendconnect.model.AddCommentResponse;
 import com.fahrimz.friendconnect.model.AddPostRequest;
 import com.fahrimz.friendconnect.model.AddPostResponse;
 import com.fahrimz.friendconnect.model.DetailPostResponse;
@@ -26,4 +28,7 @@ public interface PostService {
 
     @POST("api/likes/toggle")
     Call<ToggleLikeResponse> toggleLike(@Body ToggleLikeRequest body, @Header("Authorization") String auth);
+
+    @POST("api/comments")
+    Call<AddCommentResponse> addComment(@Body AddCommentRequest body, @Header("Authorization") String auth);
 }

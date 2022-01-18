@@ -1,11 +1,15 @@
 package com.fahrimz.friendconnect;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,13 +36,15 @@ public class DetailPostActivity extends AppCompatActivity {
     private ListCommentAdapter listCommentAdapter;
     private ArrayList<CommentsItem> listComment = null;
 
-    private TextView txtUsername, txtBody, txtLikes, txtDate, txtCommentTitle;
+    private TextView txtUsername, txtBody, txtLikes, txtDate, txtCommentTitle, txtAddComment;
     private ImageView imgAvatar;
     private ImageButton imgLike;
     public static final String EXTRA_KEY_ID_POST = "ID_POST";
 
     PrefManager pref;
     PostService postService;
+
+    ActivityResultLauncher<Intent> addCommentActivityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,6 @@ public class DetailPostActivity extends AppCompatActivity {
         listCommentAdapter = new ListCommentAdapter(listComment);
         commentRecyclerView.setAdapter(listCommentAdapter);
 
-
         txtUsername = findViewById(R.id.txtDetailUsername);
         txtBody = findViewById(R.id.txtDetailBody);
         txtLikes = findViewById(R.id.txtDetailLikes);
@@ -61,12 +66,27 @@ public class DetailPostActivity extends AppCompatActivity {
         txtCommentTitle = findViewById(R.id.txtCommentTitle);
         imgAvatar = findViewById(R.id.imgDetailAvatar);
         imgLike = findViewById(R.id.imgLike);
+        txtAddComment = findViewById(R.id.txtAddComment);
 
         // get idPost from previous activity
         Bundle extras = getIntent().getExtras();
         try {
             int idPost = extras.getInt(EXTRA_KEY_ID_POST);
             getData(idPost);
+
+            addCommentActivityLauncher = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            getData(idPost);
+                        }
+                    }
+            );
+
+            txtAddComment.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AddCommentActivity.class);
+                intent.putExtra(EXTRA_KEY_ID_POST, idPost);
+                addCommentActivityLauncher.launch(intent);
+            });
 
             imgLike.setOnClickListener(v -> {
                 toggleLikeOnPost(idPost, pref.getIdUser());
