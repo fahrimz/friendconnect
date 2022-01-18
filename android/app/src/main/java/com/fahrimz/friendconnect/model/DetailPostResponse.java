@@ -84,4 +84,14 @@ public class DetailPostResponse{
 	public String getAvatarUrl(){
 		return avatarUrl;
 	}
+
+	public boolean userLikedThisPost(int idUser) {
+		for (LikesItem like: this.getLikes()) {
+			if (like.getIdUser() == idUser) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
