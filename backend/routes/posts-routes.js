@@ -7,7 +7,7 @@ const router = express.Router();
 /* GET users listing. */
 router.get('/', async (req, res) => {
   try {
-    const query = 'select p.*, (select count(id_like) from likes where id_post = p.id_post) as likes, (select count(id_comment) as comments from comments where id_post = p.id_post) from posts p'
+    const query = 'select p.*, u.username, u.avatar_url, (select count(id_like) from likes where id_post = p.id_post) as likes, (select count(id_comment) as comments from comments where id_post = p.id_post) from posts p join users u using (id_user)';
     const posts = await pool.query(query);
     res.json({ posts: posts.rows });
   } catch (error) {

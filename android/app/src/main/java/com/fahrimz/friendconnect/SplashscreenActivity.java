@@ -10,7 +10,7 @@ import android.util.Log;
 public class SplashscreenActivity extends AppCompatActivity {
 
     PrefManager pref;
-    private int loadingTime = 3000; // 3s
+    private int loadingTime = 300; // 3s
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

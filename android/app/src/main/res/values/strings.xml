@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">friendconnect</string>
     <string name="friendconnect">friendconnect</string>
+    <string name="posts">Posts</string>
 </resources>
