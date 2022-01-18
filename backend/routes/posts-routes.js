@@ -14,6 +14,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
     let query = 'select p.*, u.username, u.avatar_url, (select count(id_like) from likes where id_post = p.id_post) as likes, (select count(id_comment) as comments from comments where id_post = p.id_post) from posts p join users u using (id_user)';
     query += ' where id_user in (select id_friend from friendships where id_user = $1)';
+    query += ' or id_user = $1';
     
     const posts = await pool.query(query, [payload.id_user]);
     res.json({ posts: posts.rows });

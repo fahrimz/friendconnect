@@ -184,4 +184,11 @@ public class DetailPostActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(Activity.RESULT_OK);
+        super.onBackPressed();  // optional depending on your needs
+    }
 }

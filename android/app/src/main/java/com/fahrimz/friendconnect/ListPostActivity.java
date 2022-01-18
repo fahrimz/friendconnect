@@ -41,6 +41,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
 
     private PrefManager pref;
     private PostService postService;
+    ActivityResultLauncher<Intent> addPostActivityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
 
-        ActivityResultLauncher<Intent> addPostActivityLauncher = registerForActivityResult(
+        addPostActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     getData();
@@ -103,6 +104,6 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
     public void onItemClicked(View view, PostsItem item) {
         Intent intent = new Intent(this, DetailPostActivity.class);
         intent.putExtra(EXTRA_KEY_ID_POST, item.getIdPost());
-        startActivity(intent);
+        addPostActivityLauncher.launch(intent);
     }
 }
