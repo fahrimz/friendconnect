@@ -22,7 +22,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newUser = await pool.query(
       'INSERT INTO users (username, password, invite_code, avatar_url) VALUES ($1,$2,$3, $4) RETURNING *'
-      , [req.body.username, hashedPassword, req.body.username, 'https://via.placeholder.com/100']);
+      , [req.body.username, hashedPassword, req.body.username, `https://via.placeholder.com/100?text=username`]);
     res.json(jwtTokens(newUser.rows[0]));
   } catch (error) {
     res.status(500).json({ error: error.message });
