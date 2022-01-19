@@ -6,16 +6,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.WindowManager;
 
 public class SplashscreenActivity extends AppCompatActivity {
 
     PrefManager pref;
-    private int loadingTime = 300; // 3s
+    private int loadingTime = 3000; // 3s
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         pref = new PrefManager(this);
 
         new Handler().postDelayed(() -> {

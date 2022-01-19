@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_post);
         setTitle("Posts");
+
 
         pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
@@ -125,6 +127,11 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
                 intent = new Intent(this, MyProfileActivity.class);
                 activityLauncher.launch(intent);
                 return true;
+            case R.id.logout:
+                pref.clearSession();
+                intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
 

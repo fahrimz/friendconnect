@@ -13,4 +13,10 @@
         android:title="Add Friend"
         app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/logout"
+        android:title="Logout"
+        app:showAsAction="never"
+        />
 </menu>
