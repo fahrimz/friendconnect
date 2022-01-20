@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
     private ListPostAdapter listPostAdapter;
     private ArrayList<PostsItem> listPost = null;
     private FloatingActionButton btnAdd;
+    private SwipeRefreshLayout swipeRefresh;
 
     private PrefManager pref;
     private PostService postService;
@@ -48,6 +50,13 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
         setContentView(R.layout.activity_list_post);
         setTitle("Posts");
 
+        swipeRefresh = findViewById(R.id.swipeRefresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
 
         pref = new PrefManager(this);
         postService = ApiUtils.getPostService();
@@ -91,10 +100,13 @@ public class ListPostActivity extends AppCompatActivity implements RecyclerViewC
                     ErrorResponse error = gson.fromJson(response.errorBody().charStream(), ErrorResponse.class);
                     Toast.makeText(ListPostActivity.this, error.getError(), Toast.LENGTH_SHORT).show();
                 }
+
+                swipeRefresh.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<PostsResponse> call, Throwable t) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(ListPostActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });

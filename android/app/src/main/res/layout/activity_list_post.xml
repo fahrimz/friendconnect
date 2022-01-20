@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ListPostActivity">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
@@ -14,6 +19,8 @@
         android:paddingBottom="80dp"
         android:clipToPadding="false"
         tools:layout_editor_absoluteX="0dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
