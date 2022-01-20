@@ -91,14 +91,21 @@ router.post('/add-friend', authenticateToken, async (req, res) => {
 
   const friend = friendQueryResult.rows[0]
 
-  try {
-    await pool.query(
-      'INSERT INTO friendships VALUES (default, $1, $2)',
-      [user.id_user, friend.id_user]
-    )
+  // note: we don't try/catch this because if connecting throws an exception
+  // we don't need to dispose of the client (it will be undefined)
+  const client = await pool.connect()
 
+  try {
+    await client.query('begin')
+    const queryText = 'INSERT INTO friendships VALUES (default, $1, $2)'
+    
+    await client.query(queryText, [user.id_user, friend.id_user])
+    await client.query(queryText, [friend.id_user, user.id_user])
+    await client.query('commit')
+ 
     return res.json({message: 'friend added.'})
   } catch (error) {
+    await client.query('rollback')
     return res.status(500).json({ error: error.message })
   }
 })
