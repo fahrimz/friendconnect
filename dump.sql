@@ -84,6 +84,37 @@ ALTER SEQUENCE public.friendships_id_friendship_seq OWNED BY public.friendships.
 
 
 --
+-- Name: likes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.likes (
+    id_like integer NOT NULL,
+    id_post integer NOT NULL,
+    id_user integer NOT NULL
+);
+
+
+--
+-- Name: likes_id_like_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.likes_id_like_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: likes_id_like_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.likes_id_like_seq OWNED BY public.likes.id_like;
+
+
+--
 -- Name: posts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -91,7 +122,7 @@ CREATE TABLE public.posts (
     id_post integer NOT NULL,
     id_user integer NOT NULL,
     body text NOT NULL,
-    likes integer DEFAULT 0 NOT NULL
+    created_at timestamp without time zone DEFAULT now()
 );
 
 
@@ -122,9 +153,10 @@ ALTER SEQUENCE public.posts_id_post_seq OWNED BY public.posts.id_post;
 CREATE TABLE public.users (
     id_user integer NOT NULL,
     username character varying(15) NOT NULL,
-    password character varying(50) NOT NULL,
+    password text NOT NULL,
     invite_code character varying(10) NOT NULL,
-    avatar_url text
+    avatar_url text,
+    bio text
 );
 
 
@@ -163,6 +195,13 @@ ALTER TABLE ONLY public.friendships ALTER COLUMN id_friendship SET DEFAULT nextv
 
 
 --
+-- Name: likes id_like; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes ALTER COLUMN id_like SET DEFAULT nextval('public.likes_id_like_seq'::regclass);
+
+
+--
 -- Name: posts id_post; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -174,71 +213,6 @@ ALTER TABLE ONLY public.posts ALTER COLUMN id_post SET DEFAULT nextval('public.p
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id_user SET DEFAULT nextval('public.users_id_user_seq'::regclass);
-
-
---
--- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.comments (id_comment, id_post, id_user, body) FROM stdin;
-1	1	2	hello to you too!
-\.
-
-
---
--- Data for Name: friendships; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.friendships (id_friendship, id_user, id_friend) FROM stdin;
-1	1	2
-\.
-
-
---
--- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.posts (id_post, id_user, body, likes) FROM stdin;
-1	1	hello world!	0
-\.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.users (id_user, username, password, invite_code, avatar_url) FROM stdin;
-1	fahrimz	12345678	invitefahr	https://via.placeholder.com/100
-2	zul	12345678	invitezul	https://via.placeholder.com/100
-\.
-
-
---
--- Name: comments_id_comment_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.comments_id_comment_seq', 1, false);
-
-
---
--- Name: friendships_id_friendship_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.friendships_id_friendship_seq', 1, false);
-
-
---
--- Name: posts_id_post_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.posts_id_post_seq', 1, false);
-
-
---
--- Name: users_id_user_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.users_id_user_seq', 1, false);
 
 
 --
@@ -255,6 +229,14 @@ ALTER TABLE ONLY public.comments
 
 ALTER TABLE ONLY public.friendships
     ADD CONSTRAINT friendships_pkey PRIMARY KEY (id_friendship);
+
+
+--
+-- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id_like);
 
 
 --
@@ -319,6 +301,22 @@ ALTER TABLE ONLY public.friendships
 
 ALTER TABLE ONLY public.friendships
     ADD CONSTRAINT friendships_id_user_fkey FOREIGN KEY (id_user) REFERENCES public.users(id_user);
+
+
+--
+-- Name: likes likes_id_post_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_id_post_fkey FOREIGN KEY (id_post) REFERENCES public.posts(id_post);
+
+
+--
+-- Name: likes likes_id_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_id_user_fkey FOREIGN KEY (id_user) REFERENCES public.users(id_user);
 
 
 --
